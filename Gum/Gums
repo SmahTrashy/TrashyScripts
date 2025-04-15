@@ -1,10 +1,4 @@
     return {
-        ["VIP Gum"] = {
-            Storage = 550;
-            Area = "The Overworld";
-            Image = "rbxassetid://125218223091015";
-            Cost = Gamepasses.VIP.Id;
-        };
         ["Basic Gum"] = {
             Storage = 10;
             Area = "The Overworld";
