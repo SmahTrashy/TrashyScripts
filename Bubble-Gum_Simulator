@@ -1,0 +1,111 @@
+local Services = setmetatable({}, {__index = function(Self, Index)
+    return cloneref(game:GetService(Index))
+end})
+local Players = Services.Players
+local RunService = Services.RunService
+local Workspace = Services.Workspace
+local ReplicatedStorage = Services.ReplicatedStorage
+local Player = Players.LocalPlayer
+local wait = task.wait
+local spawn = task.spawn
+
+local Event = ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event")
+local Generic = Workspace:WaitForChild("Rendered"):WaitForChild("Generic")
+local Islands = Workspace:WaitForChild("Worlds"):WaitForChild("The Overworld").Islands
+
+local Eggs = {}
+for i,v in next, Generic:GetChildren() do
+    if v.Name:find("Egg") and not table.find(Eggs, v.Name) then
+        table.insert(Eggs, v.Name)
+    end
+end
+local Toggles = {}
+
+local Mercury = loadstring(game:HttpGet("https://raw.githubusercontent.com/deeeity/mercury-lib/master/src.lua"))()
+local GUI = Mercury:Create{
+    Name = "Mercury",
+    Size = UDim2.fromOffset(600, 400),
+    Theme = Mercury.Themes.Dark,
+    Link = "https://github.com/deeeity/mercury-lib"
+}
+local Tab = GUI:Tab{
+	Name = "New Tab",
+	Icon = "rbxassetid://8569322835"
+}
+Tab:Toggle{
+	Name = "Blow Bubbles",
+	StartingState = false,
+	Description = "Blows Gum what else would it do",
+	Callback = function(Enabled) 
+        Toggles.BlowBubbles = Enabled
+    end
+}
+
+Tab:Toggle{
+	Name = "Sell Bubbles",
+	StartingState = false,
+	Description = "Sells your used gum to the weirdos for coins",
+	Callback = function(Enabled) 
+        Toggles.SellBubbles = Enabled
+    end
+}
+
+Tab:Toggle{
+	Name = "Auto Hatch Eggs",
+	StartingState = false,
+	Description = "Sells your used gum to the weirdos for coins",
+	Callback = function(Enabled) 
+        Toggles.HatchEgg = Enabled
+    end
+}
+
+Tab:Dropdown{
+	Name = "Eggs",
+	StartingText = "eggs what more do you need",
+	Description = "its just all the eggs??? why are you reading this",
+	Items = Eggs,
+	Callback = function(Selectable) 
+        SelectableEgg = Selectable
+    end
+}
+
+Tab:Button{
+	Name = "Unlock Islands",
+	Description = "Unlocks Islands what did you expect",
+	Callback = function()
+        for i,v in next, Islands:GetChildren() do
+            if v:IsA("Folder") then
+                local HitBox = v.Island:FindFirstChild("UnlockHitbox", true)
+                if HitBox then
+                    firetouchinterest(Player.Character.PrimaryPart, HitBox, 0)
+                    firetouchinterest(Player.Character.PrimaryPart, HitBox, 1)
+                end
+            end
+        end
+    end
+}
+
+GUI:Credit{
+	Name = "I banged your mother",
+	Description = "Helped with the script",
+	V3rm = "link/name",
+	Discord = "helo#1234"
+}
+
+local Connection;
+Connection = RunService.RenderStepped:Connect(function()
+    local Success, Context = pcall(function()
+        if Toggles.BlowBubbles then
+            Event:FireServer("BlowBubble")
+        end
+        if Toggles.SellBubbles then
+            Event:FireServer("SellBubble")
+        end
+        if Toggles.HatchEgg then
+            Event:FireServer("HatchEgg", SelectableEgg, 1)
+        end
+    end)
+    if not Success then
+        print("Your mom errored:", Context)
+    end
+end)
