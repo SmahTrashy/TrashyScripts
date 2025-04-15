@@ -42,10 +42,6 @@ return {
 			Amount = 1500;
 		};
 		Color = Color3.fromRGB(180, 106, 255);
-		Texture = texture({
-			ID = "rbxassetid://89128567391740";
-			Scale = 3;
-		});
 	};
 	Watermelon = {
 		Bubbles = 40;
@@ -79,10 +75,6 @@ return {
 			Amount = 35000;
 		};
 		Color = Color3.new(1, 1, 1);
-		Texture = texture({
-			ID = "rbxassetid://119942239841192";
-			Scale = 3;
-		});
 	};
 	Gold = {
 		Bubbles = 130;
@@ -131,10 +123,6 @@ return {
 			Amount = 30000000;
 		};
 		Color = Color3.new(1, 1, 1);
-		Texture = texture({
-			ID = "rbxassetid://114500364224740";
-			Scale = 2;
-		});
 	};
 	Molten = {
 		Bubbles = 1450;
