@@ -108,10 +108,7 @@ return {
 			Amount = 1500000;
 		};
 		Color = Color3.fromRGB(255, 147, 246);
-		Texture = texture({
-			ID = "rbxassetid://109378738043919";
-			Scale = 2;
-		});
+
 	};
 	Swirl = {
 		Bubbles = 950;
