@@ -12,22 +12,29 @@ local spawn = task.spawn
 local Event = ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("Event")
 local Generic = Workspace:WaitForChild("Rendered"):WaitForChild("Generic")
 local Islands = Workspace:WaitForChild("Worlds"):WaitForChild("The Overworld").Islands
+local HugeNumber = math.huge
 
 local Eggs = {}
+local Costs = {}
+local Functions = {}
+local Toggles = {}
+local Gum = loadstring(game:HttpGet("https://raw.githubusercontent.com/SmahTrashy/TrashyScripts/refs/heads/main/Gum/Gums"))()
+local Flavors = loadstring(game:HttpGet("https://raw.githubusercontent.com/SmahTrashy/TrashyScripts/refs/heads/main/Gum/Flavors"))()
+
 for i,v in next, Generic:GetChildren() do
     if v.Name:find("Egg") and not table.find(Eggs, v.Name) then
         table.insert(Eggs, v.Name)
     end
 end
-local Toggles = {}
 
 local Mercury = loadstring(game:HttpGet("https://raw.githubusercontent.com/deeeity/mercury-lib/master/src.lua"))()
 local GUI = Mercury:Create{
     Name = "Mercury",
     Size = UDim2.fromOffset(600, 400),
     Theme = Mercury.Themes.Dark,
-    Link = "https://github.com/deeeity/mercury-lib"
+    Link = ""
 }
+
 local Tab = GUI:Tab{
 	Name = "New Tab",
 	Icon = "rbxassetid://8569322835"
@@ -69,6 +76,51 @@ Tab:Dropdown{
     end
 }
 
+Tab:Toggle{
+	Name = "Buy Best Gum",
+	StartingState = false,
+	Description = "Buys Best Gum",
+	Callback = function(Enabled) 
+        Toggles.GumBuy = Enabled
+    end
+}
+
+Tab:Toggle{
+	Name = "Buy Best Flavor",
+	StartingState = false,
+	Description = "Buys Best Flavor",
+	Callback = function(Enabled) 
+        Toggles.FlavorBuy = Enabled
+    end
+}
+
+Tab:Toggle{
+	Name = "Equip Best Pet",
+	StartingState = false,
+	Description = "Equips Best Pet",
+	Callback = function(Enabled) 
+        Toggles.EquipBest = Enabled
+    end
+}
+
+Tab:Toggle{
+	Name = "Claim Prizes",
+	StartingState = false,
+	Description = "Claims In game prizes",
+	Callback = function(Enabled) 
+        Toggles.ClaimPrizes = Enabled
+    end
+}
+
+Tab:Toggle{
+	Name = "Doggy Win",
+	StartingState = false,
+	Description = "Wins Doggy Mini game",
+	Callback = function(Enabled) 
+        Toggles.DoggyWin = Enabled
+    end
+}
+
 Tab:Button{
 	Name = "Unlock Islands",
 	Description = "Unlocks Islands what did you expect",
@@ -104,8 +156,41 @@ Connection = RunService.RenderStepped:Connect(function()
         if Toggles.HatchEgg then
             Event:FireServer("HatchEgg", SelectableEgg, 1)
         end
+        if Toggles.EquipBest then
+            Event:FireServer("EquipBestPets")
+        end
     end)
     if not Success then
         print("Your mom errored:", Context)
+    end
+end)
+
+spawn(function()
+    while wait() do
+        local Success, Context = pcall(function()
+            if Toggles.DoggyWin then
+                for i=1, 3 do wait(.2)
+                    Event:FireServer("DoggyJumpWin",i)
+                end
+            end
+            if Toggles.ClaimPrizes then
+                for i=1, 100 do wait(.2)
+                    Event:FireServer("ClaimPrize",i)
+                end
+            end
+            if Toggles.GumBuy then
+                for i,v in next, Gum do wait(.2)
+                    Event:FireServer("GumShopPurchase", i)
+                end
+            end
+            if Toggles.FlavorBuy then
+                for i,v in next, Flavors do wait(.2)
+                    Event:FireServer("GumShopPurchase", i)
+                end
+            end
+        end)
+        if not Success then
+            print("Your mom errored:", Context)
+        end
     end
 end)
